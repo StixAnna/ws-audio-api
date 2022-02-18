@@ -1,3 +1,5 @@
+# Project isn't mainteined anymore. Feel free to fork it and make changes you need.
+
 WebSocket Audio API
 ====================
 #### Library to broadcast the sound from the microphone through a WebSocket
