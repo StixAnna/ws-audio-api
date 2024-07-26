@@ -200,9 +200,9 @@
 		} else {
 			this.socket = this.parentSocket;
 		}
-        //this.socket.onopen = function () {
-        //    console.log('Connected to server ' + _this.config.server.host + ' as listener');
-        //};
+        this.socket.onopen = function () {
+           console.log('Connected to server ' + _this.config.server.host + ' as listener');
+        };
         var _onmessage = this.parentOnmessage = this.socket.onmessage;
         this.socket.onmessage = function(message) {
         	if (_onmessage) {
