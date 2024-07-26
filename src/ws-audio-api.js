@@ -17,8 +17,9 @@
 			bufferSize: 4096
 		},
 		server: {
-			host: window.location.hostname
-		}
+			// host: window.location.hostname
+			host: 'ws://' + window.location.hostname + ':5000'
+		},
 	};
 
 	var audioContext = new(window.AudioContext || window.webkitAudioContext)();
