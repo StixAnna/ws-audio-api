@@ -18,7 +18,7 @@
 		},
 		server: {
 			// host: window.location.hostname
-			host: 'ws://' + window.location.hostname + ':5000'
+			host: 'wss://' + window.location.hostname + ':5000'
 		},
 	};
 
@@ -81,7 +81,7 @@
 			this.socket = this.parentSocket;
 		}
 
-		this.socket.binaryType = 'arraybuffer';
+        this.socket.binaryType = 'arraybuffer';  // <-- ВАЖНО: установите тип бинарных данных
 
 		if (this.socket.readyState == WebSocket.OPEN) {
 			this._makeStream(onError);
@@ -188,7 +188,7 @@
 			if (_this.audioQueue.length()) {
 				e.outputBuffer.getChannelData(0).set(_this.audioQueue.read(_this.config.codec.bufferSize));
 			} else {
-				e.outputBuffer.getChannelData(0).set(_this.silence);
+				e.outputBuffer.getChannelData(0).set(_this.silence);	//echopodavlenie
 			}
 		};
 		this.gainNode = audioContext.createGain();
@@ -200,6 +200,7 @@
 		} else {
 			this.socket = this.parentSocket;
 		}
+        // this.socket.binaryType = 'arraybuffer';  // <-- ВАЖНО: ne установите тип бинарных данных
         this.socket.onopen = function () {
            console.log('Connected to server ' + _this.config.server.host + ' as listener');
         };
