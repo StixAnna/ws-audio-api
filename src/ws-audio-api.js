@@ -7,6 +7,13 @@
 //    Frame Duration: 2.5, 5, 10, 20, 40, 60
 //    Buffer Size = sample rate/6000 * 1024
 
+function createAudioContext() {
+    if (!window.audioContext) {
+        window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return window.audioContext;
+}
+
 (function(global) {
 	var defaultConfig = {
 		codec: {
@@ -17,19 +24,18 @@
 			bufferSize: 4096
 		},
 		server: {
-			// host: window.location.hostname
 			host: 'wss://' + window.location.hostname + ':5000'
 		},
 	};
 
-	var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+	// var audioContext = new(window.AudioContext || window.webkitAudioContext)();
 
 	var WSAudioAPI = global.WSAudioAPI = {
 		Player: function(config, socket) {
 			this.config = config || {};
 			this.config.codec = this.config.codec || defaultConfig.codec;
 			this.config.server = this.config.server || defaultConfig.server;
-			this.sampler = new Resampler(this.config.codec.sampleRate, audioContext.sampleRate, 1, this.config.codec.bufferSize);
+			this.sampler = new Resampler(this.config.codec.sampleRate, createAudioContext().sampleRate, 1, this.config.codec.bufferSize);
 			this.parentSocket = socket;
 
 			this.decoder = new OpusDecoder(this.config.codec.sampleRate, this.config.codec.channels);
@@ -44,7 +50,7 @@
 			this.config = config || {};
 			this.config.codec = this.config.codec || defaultConfig.codec;
 			this.config.server = this.config.server || defaultConfig.server;
-			this.sampler = new Resampler(audioContext.sampleRate, this.config.codec.sampleRate, 1, this.config.codec.bufferSize);
+			this.sampler = new Resampler(audioContext.sampleRate, createAudioContext().sampleRate, 1, this.config.codec.bufferSize);
 			this.parentSocket = socket;
 			this.encoder = new OpusEncoder(this.config.codec.sampleRate, this.config.codec.channels, this.config.codec.app, this.config.codec.frameDuration);
 			var _this = this;
