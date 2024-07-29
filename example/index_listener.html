@@ -1,5 +1,6 @@
-<html>
+<!DOCTYPE html>
     <head>
+      <meta charset="UTF-8">
       <link rel="icon" type="image/x-icon" href="favicon.ico">
     </head>
     <body>
@@ -12,15 +13,18 @@
         <a href="#" class="mute" onclick="voiceMute()">Mute</a>
         <br>
         <br>
-        <input id="volume" type="range" min ="0.0" max="1.0" step ="0.01" oninput="setVol(this.value)" onchange="setVol(this.value)" style="-webkit-appearance: slider-vertical">
+        <input id="volume" type="range" min ="0.0" max="1.0" step ="0.01" oninput="setVol(this.value)" onchange="setVol(this.value)" style="appearance: button; -webkit-appearance: slider-vertical">
         <input type="text" id="volumeIndicator">
     </body>
+    <!-- <script src="../src/ws-audio-api.js"></script> -->
     <script src="ws-audio-api.min.js"></script>
     <script>
         var player = new WSAudioAPI.Player({
-          server: {host:'ws://localhost/ws/'}  // Don't forget set correct address
+          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
         });  
-        var streamer = new WSAudioAPI.Streamer();
+        var streamer = new WSAudioAPI.Streamer({
+          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
+        });
         var mute = document.querySelector('.mute');
         var volume = document.querySelector('#volume');
         var volumeIndicator = document.querySelector('#volumeIndicator');

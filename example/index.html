@@ -1,12 +1,13 @@
 <!DOCTYPE html>
     <head>
+      <meta charset="UTF-8">
       <link rel="icon" type="image/x-icon" href="favicon.ico">
     </head>
     <body>
         <button onclick="streamer.start()">Start stream</button>
         <button onclick="streamer.stop()">Stop stream</button>
-        <!-- <button onclick="player.start()">Play stream</button>
-        <button onclick="player.stop()">Stop playing</button> -->
+        <button onclick="player.start()">Play stream</button>
+        <button onclick="player.stop()">Stop playing</button>
         <br>
         <br>
         <a href="#" class="mute" onclick="voiceMute()">Mute</a>
@@ -19,10 +20,10 @@
     <script src="ws-audio-api.min.js"></script>
     <script>
         var player = new WSAudioAPI.Player({
-          server: {host:'ws://localhost/ws/'} // Don't forget set correct address
+          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
         });
         var streamer = new WSAudioAPI.Streamer({
-          server: {host:'ws://localhost/ws/'} // Don't forget set correct address
+          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
         });
         var mute = document.querySelector('.mute');
         var volume = document.querySelector('#volume');

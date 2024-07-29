@@ -7,6 +7,13 @@
 //    Frame Duration: 2.5, 5, 10, 20, 40, 60
 //    Buffer Size = sample rate/6000 * 1024
 
+function createAudioContext() {
+    if (!window.audioContext) {
+        window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return window.audioContext;
+}
+
 (function(global) {
 	var defaultConfig = {
 		codec: {
@@ -17,19 +24,18 @@
 			bufferSize: 4096
 		},
 		server: {
-			// host: window.location.hostname
-			host: 'ws://' + window.location.hostname + ':5000'
+			host: 'wss://' + window.location.hostname + ':5000'
 		},
 	};
 
-	var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+	// var audioContext = new(window.AudioContext || window.webkitAudioContext)();
 
 	var WSAudioAPI = global.WSAudioAPI = {
 		Player: function(config, socket) {
 			this.config = config || {};
 			this.config.codec = this.config.codec || defaultConfig.codec;
 			this.config.server = this.config.server || defaultConfig.server;
-			this.sampler = new Resampler(this.config.codec.sampleRate, audioContext.sampleRate, 1, this.config.codec.bufferSize);
+			this.sampler = new Resampler(this.config.codec.sampleRate, createAudioContext().sampleRate, 1, this.config.codec.bufferSize);
 			this.parentSocket = socket;
 
 			this.decoder = new OpusDecoder(this.config.codec.sampleRate, this.config.codec.channels);
@@ -44,7 +50,7 @@
 			this.config = config || {};
 			this.config.codec = this.config.codec || defaultConfig.codec;
 			this.config.server = this.config.server || defaultConfig.server;
-			this.sampler = new Resampler(audioContext.sampleRate, this.config.codec.sampleRate, 1, this.config.codec.bufferSize);
+			this.sampler = new Resampler(audioContext.sampleRate, createAudioContext().sampleRate, 1, this.config.codec.bufferSize);
 			this.parentSocket = socket;
 			this.encoder = new OpusEncoder(this.config.codec.sampleRate, this.config.codec.channels, this.config.codec.app, this.config.codec.frameDuration);
 			var _this = this;
@@ -81,7 +87,7 @@
 			this.socket = this.parentSocket;
 		}
 
-		this.socket.binaryType = 'arraybuffer';
+        this.socket.binaryType = 'arraybuffer';  // <-- ВАЖНО: установите тип бинарных данных
 
 		if (this.socket.readyState == WebSocket.OPEN) {
 			this._makeStream(onError);
@@ -160,6 +166,13 @@
 	WSAudioAPI.Player.prototype.start = function() {
 		var _this = this;
 
+		// Play a blank sound to request permission to use speakers
+		var buffer = audioContext.createBuffer(1, 1, 22050);
+		var node = audioContext.createBufferSource();
+		node.buffer = buffer;
+		node.connect(audioContext.destination);
+		node.start(0);
+
 		this.audioQueue = {
 			buffer: new Float32Array(0),
 
@@ -188,7 +201,7 @@
 			if (_this.audioQueue.length()) {
 				e.outputBuffer.getChannelData(0).set(_this.audioQueue.read(_this.config.codec.bufferSize));
 			} else {
-				e.outputBuffer.getChannelData(0).set(_this.silence);
+				e.outputBuffer.getChannelData(0).set(_this.silence);	//echopodavlenie
 			}
 		};
 		this.gainNode = audioContext.createGain();
