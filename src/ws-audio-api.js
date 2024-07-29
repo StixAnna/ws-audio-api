@@ -160,6 +160,13 @@
 	WSAudioAPI.Player.prototype.start = function() {
 		var _this = this;
 
+		// Воспроизведение пустого звука для запроса разрешения на использование динамиков
+		var buffer = audioContext.createBuffer(1, 1, 22050);
+		var node = audioContext.createBufferSource();
+		node.buffer = buffer;
+		node.connect(audioContext.destination);
+		node.start(0);
+
 		this.audioQueue = {
 			buffer: new Float32Array(0),
 
@@ -201,9 +208,9 @@
 			this.socket = this.parentSocket;
 		}
         // this.socket.binaryType = 'arraybuffer';  // <-- ВАЖНО: ne установите тип бинарных данных
-        this.socket.onopen = function () {
-           console.log('Connected to server ' + _this.config.server.host + ' as listener');
-        };
+        // this.socket.onopen = function () {
+        //    console.log('Connected to server ' + _this.config.server.host + ' as listener');
+        // };
         var _onmessage = this.parentOnmessage = this.socket.onmessage;
         this.socket.onmessage = function(message) {
         	if (_onmessage) {
