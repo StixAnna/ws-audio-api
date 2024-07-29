@@ -166,7 +166,7 @@ function createAudioContext() {
 	WSAudioAPI.Player.prototype.start = function() {
 		var _this = this;
 
-		// Воспроизведение пустого звука для запроса разрешения на использование динамиков
+		// Play a blank sound to request permission to use speakers
 		var buffer = audioContext.createBuffer(1, 1, 22050);
 		var node = audioContext.createBufferSource();
 		node.buffer = buffer;
@@ -213,10 +213,9 @@ function createAudioContext() {
 		} else {
 			this.socket = this.parentSocket;
 		}
-        // this.socket.binaryType = 'arraybuffer';  // <-- ВАЖНО: ne установите тип бинарных данных
-        // this.socket.onopen = function () {
+        //this.socket.onopen = function () {
         //    console.log('Connected to server ' + _this.config.server.host + ' as listener');
-        // };
+        //};
         var _onmessage = this.parentOnmessage = this.socket.onmessage;
         this.socket.onmessage = function(message) {
         	if (_onmessage) {
