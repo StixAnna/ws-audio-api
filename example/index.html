@@ -4,21 +4,21 @@
       <link rel="icon" type="image/x-icon" href="favicon.ico">
     </head>
     <body>
-        <button onclick="streamer.start()">Start stream</button>
+        <!-- <button onclick="streamer.start()">Start stream</button>
         <button onclick="streamer.stop()">Stop stream</button>
         <button onclick="player.start()">Play stream</button>
         <button onclick="player.stop()">Stop playing</button>
+        <br><br> -->
+        <button id="startButton">playing__stream&&listen</button>
         <br>
-        <br>
-        <a href="#" class="mute" onclick="voiceMute()">Mute</a>
+        <!-- <a href="#" class="mute" onclick="voiceMute()">Mute</a>
         <br>
         <br>
         <input id="volume" type="range" min ="0.0" max="1.0" step ="0.01" oninput="setVol(this.value)" onchange="setVol(this.value)" style="appearance: button; -webkit-appearance: slider-vertical">
-        <input type="text" id="volumeIndicator">
+        <input type="text" id="volumeIndicator"> -->
     </body>
-    <!-- <script src="../src/ws-audio-api.js"></script> -->
     <script src="ws-audio-api.min.js"></script>
-    <script>
+    <!-- <script>
         var player = new WSAudioAPI.Player({
           // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
         });
@@ -28,7 +28,7 @@
         var mute = document.querySelector('.mute');
         var volume = document.querySelector('#volume');
         var volumeIndicator = document.querySelector('#volumeIndicator');
-        volumeIndicator.value = player.getVolume();
+        volumeIndicator.value = WSAudioAPI.player.getVolume();
 
         function setVol(val){
             player.setVolume(val);
@@ -46,5 +46,5 @@
             mute.innerHTML = "Mute";
           }
         }
-    </script>
+    </script> -->
 </html>

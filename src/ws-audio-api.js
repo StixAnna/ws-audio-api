@@ -17,10 +17,10 @@ function createAudioContext() {
 (function(global) {
 	var defaultConfig = {
 		codec: {
-			sampleRate: 24000,
+			sampleRate: 48000,
 			channels: 1,
 			app: 2048,
-			frameDuration: 20,
+			frameDuration: 60,
 			bufferSize: 4096
 		},
 		server: {
@@ -217,18 +217,20 @@ function createAudioContext() {
         //    console.log('Connected to server ' + _this.config.server.host + ' as listener');
         //};
         var _onmessage = this.parentOnmessage = this.socket.onmessage;
-        this.socket.onmessage = function(message) {
-        	if (_onmessage) {
-        		_onmessage(message);
-        	}
-        	if (message.data instanceof Blob) {
-        		var reader = new FileReader();
-        		reader.onload = function() {
-        			_this.audioQueue.write(_this.decoder.decode_float(reader.result));
-        		};
-        		reader.readAsArrayBuffer(message.data);
-        	}
-        };
+		this.socket.onmessage = function(message) {
+			if (_onmessage) {
+				_onmessage(message);
+			}
+			if (message.data instanceof Blob) {
+				var reader = new FileReader();
+				reader.onload = function() {
+					_this.audioQueue.write(_this.decoder.decode_float(reader.result));
+				};
+				reader.readAsArrayBuffer(message.data);
+			} else if (message.data instanceof ArrayBuffer) {
+				_this.audioQueue.write(_this.decoder.decode_float(message.data));
+			}
+		};
         //this.socket.onclose = function () {
         //    console.log('Connection to server closed');
         //};
@@ -258,4 +260,29 @@ function createAudioContext() {
       		this.socket.onmessage = this.parentOnmessage;
       	}
       };
-    })(window);
+  	// Функция для создания и инициализации Player и Streamer
+    function initPlayerAndStreamer() {
+        var socket = new WebSocket(defaultConfig.server.host);
+
+        socket.onopen = function() {
+            console.log('Socket is open');
+
+            // Создание экземпляра Player
+            var player = new WSAudioAPI.Player(defaultConfig, socket);
+			player.start();
+            console.log('Player created');
+
+            // Создание экземпляра Streamer
+            var streamer = new WSAudioAPI.Streamer(defaultConfig, socket);
+            streamer.start(function(error) {
+                console.error('Error getting user media:', error);
+            });
+            console.log('Streamer created');
+
+        };
+
+    }
+
+    // Добавление обработчика события для кнопки
+    document.getElementById('startButton').addEventListener('click', initPlayerAndStreamer);
+})(window);
