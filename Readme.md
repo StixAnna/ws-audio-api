@@ -1,5 +1,12 @@
 # Project isn't mainteined anymore. Feel free to fork it and make changes you need.
 
+
+while !certificate_server_keys need to go in:
+```url
+https://localhost:5000/
+```
+and confirm access to 5000 port
+
 WebSocket Audio API
 ====================
 #### Library to broadcast the sound from the microphone through a WebSocket
