@@ -4,11 +4,6 @@
       <link rel="icon" type="image/x-icon" href="favicon.ico">
     </head>
     <body>
-        <!-- <button onclick="streamer.start()">Start stream</button>
-        <button onclick="streamer.stop()">Stop stream</button>
-        <button onclick="player.start()">Play stream</button>
-        <button onclick="player.stop()">Stop playing</button>
-        <br><br> -->
         <button id="startButton">playing__stream&&listen</button>
         <br>
         <!-- <a href="#" class="mute" onclick="voiceMute()">Mute</a>
@@ -18,33 +13,36 @@
         <input type="text" id="volumeIndicator"> -->
     </body>
     <script src="ws-audio-api.min.js"></script>
-    <!-- <script>
-        var player = new WSAudioAPI.Player({
-          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
-        });
-        var streamer = new WSAudioAPI.Streamer({
-          // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
-        });
-        var mute = document.querySelector('.mute');
-        var volume = document.querySelector('#volume');
-        var volumeIndicator = document.querySelector('#volumeIndicator');
-        volumeIndicator.value = WSAudioAPI.player.getVolume();
+    <script>
+      document.getElementById('startButton').addEventListener('click', function() {
+          initPlayerAndStreamer();
+      });
+        // var player = new WSAudioAPI.Player({
+        //   // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
+        // });
+        // var streamer = new WSAudioAPI.Streamer({
+        //   // server: {host:'ws://localhost/ws/'} // Don't forget set correct address
+        // });
+        // var mute = document.querySelector('.mute');
+        // var volume = document.querySelector('#volume');
+        // var volumeIndicator = document.querySelector('#volumeIndicator');
+        // volumeIndicator.value = WSAudioAPI.player.getVolume();
 
-        function setVol(val){
-            player.setVolume(val);
-            volumeIndicator.value = player.getVolume();
-        }
+        // function setVol(val){
+        //   global.player.setVolume(val);
+        //     volumeIndicator.value = global.player.getVolume();
+        // }
 
-        function voiceMute() {
-          if(mute.id == "") {
-            streamer.mute();
-            mute.id = "activated";
-            mute.innerHTML = "Unmute";
-          } else {
-            streamer.unMute();
-            mute.id = "";
-            mute.innerHTML = "Mute";
-          }
-        }
-    </script> -->
+        // function voiceMute() {
+        //   if(mute.id == "") {
+        //     streamer.mute();
+        //     mute.id = "activated";
+        //     mute.innerHTML = "Unmute";
+        //   } else {
+        //     streamer.unMute();
+        //     mute.id = "";
+        //     mute.innerHTML = "Mute";
+        //   }
+        // }
+    </script>
 </html>

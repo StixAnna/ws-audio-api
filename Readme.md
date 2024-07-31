@@ -102,7 +102,9 @@ var defaultConfig = {
         frameDuration: 20,
         bufferSize: 4096
     },
-    server: 'ws://' + window.location.hostname + ':5000'
+    server: {
+        host: 'wss://' + window.location.hostname + ':5000'
+    },
 }
 ```
 
@@ -129,7 +131,7 @@ API
 
 Create new streamer:
 ```js
-var streamer = new WSAudioAPI.Streamer(config);
+var streamer = new WSAudioAPI.Streamer(config, websocket);
 ```
 
 Start stream
@@ -156,7 +158,7 @@ streamer.stop();
 
 Create new player
 ```js
-var player = new WSAudioAPI.Player(config);
+var player = new WSAudioAPI.Player(config, websocket);
 ```
 
 Play stream
