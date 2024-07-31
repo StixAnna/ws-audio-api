@@ -1,10 +1,9 @@
 var https = require('https');
-var fs = require("fs");
-var WebSocketServer = require('ws').Server;
+var fs = require('fs');
+var WebSocket = require('ws'); // Import WebSocket
+var WebSocketServer = WebSocket.Server;
 
 var wsPort = 5000;
-var masterId;
-var listeners = {};
 
 var httpsServer = https.createServer({
     key: fs.readFileSync('key.pem', 'utf8'),
@@ -14,38 +13,25 @@ var httpsServer = https.createServer({
 var wss = new WebSocketServer({ server: httpsServer });
 
 wss.on('connection', function (ws, req) {
-    var connectionId = req.headers['sec-websocket-key'];
-    var isMaster = false;
+    console.log('Client connected:', req.headers['sec-websocket-key']);
 
-    if (!masterId) {
-        masterId = connectionId;
-        isMaster = true;
-        ws.on('message', function (message) {
-            for (var cid in listeners) {
-                listeners[cid].send(message, {
-                    binary: true
-                }, function (err) {
+    ws.on('message', function incoming(message) {
+        // console.log('Received message:', message);
+
+        // Broadcast to everyone else.
+        wss.clients.forEach(function each(client) {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+                client.send(message, { binary: true }, function (err) {
                     if (err) {
-                        console.log('Error: ', err);
+                        console.log('Error sending message:', err);
                     }
                 });
             }
         });
-        console.log('Speaker connected');
-    } else {
-        listeners[connectionId] = ws;
-        isMaster = false;
-        console.log('Listener connected');
-    }
+    });
 
     ws.on('close', function () {
-       if (isMaster) {
-           masterId = null;
-           console.log('Speaker disconnected');
-       } else {
-           delete listeners[connectionId];
-           console.log('Listener disconnected');
-       }
+        console.log('Client disconnected:', req.headers['sec-websocket-key']);
     });
 });
 
